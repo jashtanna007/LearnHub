@@ -33,12 +33,30 @@ app.get('/health', (req, res) => {
 
 // ─── Routes ─────────────────────────────────────────────────────────────────
 const authRoutes = require('./routes/auth');
-app.use('/api/auth', authRoutes);
+const coursesRoutes = require('./routes/courses');
+const enrollmentsRoutes = require('./routes/enrollments');
+const instructorRoutes = require('./routes/instructor');
+const quizzesRoutes = require('./routes/quizzes');
+const paymentsRoutes = require('./routes/payments');
+const reviewsRoutes = require('./routes/reviews');
+const bookmarksRoutes = require('./routes/bookmarks');
+const notesRoutes = require('./routes/notes');
+const commentsRoutes = require('./routes/comments');
+const certificatesRoutes = require('./routes/certificates');
+const adminRoutes = require('./routes/admin');
 
-// TODO: Mount course routes at /api/courses
-// TODO: Mount quiz routes at /api/quizzes
-// TODO: Mount payment routes at /api/payments
-// TODO: Mount enrollment routes at /api/enrollments
+app.use('/api/auth', authRoutes);
+app.use('/api/courses', coursesRoutes);
+app.use('/api/courses', reviewsRoutes); 
+app.use('/api/enrollments', enrollmentsRoutes);
+app.use('/api/instructor', instructorRoutes);
+app.use('/api/quizzes', quizzesRoutes);
+app.use('/api/payments', paymentsRoutes);
+app.use('/api/bookmarks', bookmarksRoutes);
+app.use('/api/notes', notesRoutes);
+app.use('/api/comments', commentsRoutes);
+app.use('/api/certificates', certificatesRoutes);
+app.use('/api/admin', adminRoutes);
 
 // ─── Centralized Error Handler ──────────────────────────────────────────────
 app.use((err, req, res, next) => {

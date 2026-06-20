@@ -220,4 +220,46 @@ router.get('/me', verifyToken, async (req, res) => {
   }
 });
 
+// ─── PATCH /api/auth/me ─────────────────────────────────────────────────────
+router.patch('/me', verifyToken, async (req, res) => {
+  try {
+    const { name, avatar_url } = req.body;
+    
+    // Build update object dynamically
+    const updates = {};
+    if (name) updates.name = name;
+    if (avatar_url !== undefined) updates.avatar_url = avatar_url;
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ error: 'No fields provided to update.' });
+    }
+
+    const { data: userData, error: userError } = await supabaseAdmin
+      .from('users')
+      .update(updates)
+      .eq('id', req.user.id)
+      .select()
+      .single();
+
+    if (userError || !userData) {
+      return res.status(500).json({ error: 'Failed to update user profile.' });
+    }
+
+    return res.status(200).json({
+      user: {
+        id: userData.id,
+        name: userData.name,
+        email: userData.email,
+        role: userData.role,
+        avatar_url: userData.avatar_url,
+        streak_count: userData.streak_count || 0,
+        created_at: userData.created_at,
+      },
+    });
+  } catch (error) {
+    console.error('Patch me error:', error);
+    return res.status(500).json({ error: 'Internal server error.' });
+  }
+});
+
 module.exports = router;
